@@ -26,4 +26,4 @@ if __name__ == "__main__":
     leases = extract_leases(file_path)
 
     for lease in leases:
-        print(f"IP Address: {lease['ip_address']}, Client Hostname: {lease['client_hostname']}")
+        print(f"{lease['ip_address']},{lease['client_hostname']}")
