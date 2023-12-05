@@ -1,6 +1,6 @@
 import re,sys
 
-def extract_leases(file_path):
+def create_ansible_inventory(file_path, output_file="ansible_inventory.txt"):
     leases = []
     with open(file_path, 'r') as file:
         data = file.read()
@@ -19,7 +19,17 @@ def extract_leases(file_path):
         if client_hostname and client_hostname.startswith("pokaiok"):
             leases.append({'ip_address': ip_address, 'client_hostname': client_hostname})
 
-    return leases
+    with open(output_file, 'w') as output:
+        for lease in leases:
+            output.write(f"{lease['ip_address']} ansible_hostname={lease['client_hostname']}\n")
+
+    
+        # Ajouter la section [install] avec les hosts pokaiok
+        output.write("\n[install]\n")
+        for lease in leases:
+            output.write(f"{lease['client_hostname']}\n")
+
+    print(f"Fichier d'inventaire Ansible généré avec succès : {output_file}")
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -27,7 +37,4 @@ if __name__ == "__main__":
         sys.exit(1)
 
     file_path = sys.argv[1]
-    leases = extract_leases(file_path)
-
-    for lease in leases:
-        print(f"{lease['client_hostname']},{lease['ip_address']}")
+    create_ansible_inventory(file_path)
