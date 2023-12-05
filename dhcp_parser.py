@@ -1,4 +1,4 @@
-import re
+import re,sys
 
 def extract_leases(file_path):
     leases = []
@@ -22,8 +22,12 @@ def extract_leases(file_path):
     return leases
 
 if __name__ == "__main__":
-    file_path = "/var/lib/dhcp/dhcpd.leases"
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <file_path>")
+        sys.exit(1)
+
+    file_path = sys.argv[1]
     leases = extract_leases(file_path)
 
     for lease in leases:
-        print(f"{lease['ip_address']},{lease['client_hostname']}")
+        print(f"{lease['client_hostname']},{lease['ip_address']}")
